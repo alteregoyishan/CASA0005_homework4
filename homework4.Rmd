@@ -1,0 +1,46 @@
+---
+title: "Homework4"
+author: "Yishan Zhang"
+date: "2024-10-25"
+output: html_document
+---
+
+## Read in data
+
+```{r}
+library(readr)
+library(sf)
+library(here)
+library(tidyr)
+Composite_indices <- read.csv(here("homework4_data","HDR23-24_Composite_indices_complete_time_series.csv"))
+World_Countries <- st_read(here("homework4_data","World_Countries_(Generalized)_9029012925078512962.geojson" ))
+
+names(Composite_indices)
+names(World_Countries)
+
+```
+
+## Join data
+caculate difference in inequality between 2010 and 2019
+Make a join ID colum
+```{r}
+library(dplyr)
+library(countrycode)
+gender_inequality <- Composite_indices %>%
+  select(iso3, contains("gii"))
+
+gender_inequality2 <- gender_inequality %>%
+   mutate(gii_2019_2010 = gii_2019 - gii_2010)
+
+World_Countries2 <- World_Countries %>%
+  mutate(ISO3 = countrycode(ISO,"iso2c","iso3c"))
+
+world_gender_inequality <- World_Countries2 %>%
+  left_join(gender_inequality2, by = c("ISO3" = "iso3"))
+
+
+```
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
