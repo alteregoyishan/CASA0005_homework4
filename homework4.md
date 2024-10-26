@@ -53,4 +53,5 @@ To Demonstrate the difference in the gender inequality index between
       labs(title = "Gender Inequality Index Difference (2010-2019)") + 
       theme(plot.title = element_text(hjust = 0.5))
 
-![](figures/plot-example-1.png)
+![](figures/plot-example-1.png) ![GII
+Difference](figures/plot-example-1.png)
