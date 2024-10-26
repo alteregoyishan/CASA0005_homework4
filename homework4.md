@@ -20,8 +20,8 @@
 
 ## Process and join data
 
-Caculate difference in inequality between 2010 and 2019 Transfer iso2c
-to iso3c by using countrycode package
+Caculate difference in inequality between 2010 and 2019 
+Transfer iso2c to iso3c by using countrycode package
 
     gender_inequality <- Composite_indices %>%
       select(iso3, contains("gii"))
@@ -37,7 +37,7 @@ to iso3c by using countrycode package
 
 ## Plotting a map
 
-To Demonstrate the difference in the gender inequality index between
+To demonstrate the difference in the gender inequality index between
 2010 and 2019
 
     ggplot(world_gender_inequality) + 
