@@ -29,7 +29,7 @@ names(World_Countries)
 ```
 
 ## Process and join data
-Caculate difference in inequality between 2010 and 2019
+Calculate difference in inequality between 2010 and 2019
 Transfer iso2c to iso3c by using countrycode package
 ```{r, echo = TRUE, results = 'hide'}
 gender_inequality <- Composite_indices %>%
@@ -48,7 +48,7 @@ world_gender_inequality <- World_Countries2 %>%
 ```
 
 ## Plotting a map 
-To Demonstrate the difference in the gender inequality index between 2010 and 2019
+To demonstrate the difference in the gender inequality index between 2010 and 2019
 ```{r plot-example, echo=TRUE, fig.path="figures/"}
 ggplot(world_gender_inequality) + 
   geom_sf(aes(fill = gii_2019_2010), 
