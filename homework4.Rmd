@@ -2,10 +2,10 @@
 title: "Homework4"
 author: "Yishan Zhang"
 date: "2024-10-25"
-output: html_document
+output: md_document
 ---
 ## Library
-```{r, echo = TRUE, results = 'hide'}
+```{r, echo = TRUE, results = 'hide', message = FALSE, warning = FALSE}
 library(readr)
 library(sf)
 library(here)
@@ -46,7 +46,7 @@ world_gender_inequality <- World_Countries2 %>%
 
 ## Plotting a map 
 To Demonstrate the difference in the gender inequality index between 2010 and 2019
-```{r}
+```{r plot-example, echo=TRUE, fig.path="figures/"}
 ggplot(world_gender_inequality) + 
   geom_sf(aes(fill = gii_2019_2010), 
           color = "darkgray", 
