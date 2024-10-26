@@ -4,13 +4,19 @@ author: "Yishan Zhang"
 date: "2024-10-25"
 output: html_document
 ---
-
-## Read in data
-```{r}
+## Library
+```{r, echo = TRUE, results = 'hide'}
 library(readr)
 library(sf)
 library(here)
 library(tidyr)
+library(dplyr)
+library(countrycode)
+library(ggplot2)
+```
+
+## Read in data
+```{r, echo = TRUE, results = 'hide'}
 Composite_indices <- read.csv(here("homework4_data","HDR23-24_Composite_indices_complete_time_series.csv"))
 World_Countries <- st_read(here("homework4_data","World_Countries_(Generalized)_9029012925078512962.geojson" ))
 
@@ -22,9 +28,7 @@ names(World_Countries)
 ## Process and join data
 Caculate difference in inequality between 2010 and 2019
 Transfer iso2c to iso3c by using countrycode package
-```{r}
-library(dplyr)
-library(countrycode)
+```{r, echo = TRUE, results = 'hide'}
 gender_inequality <- Composite_indices %>%
   select(iso3, contains("gii"))
 
@@ -42,9 +46,7 @@ world_gender_inequality <- World_Countries2 %>%
 
 ## Plotting a map 
 To Demonstrate the difference in the gender inequality index between 2010 and 2019
-
 ```{r}
-library(ggplot2)
 ggplot(world_gender_inequality) + 
   geom_sf(aes(fill = gii_2019_2010), 
           color = "darkgray", 
