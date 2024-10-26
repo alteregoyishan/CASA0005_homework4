@@ -62,4 +62,3 @@ ggplot(world_gender_inequality) +
   labs(title = "Gender Inequality Index Difference (2010-2019)") + 
   theme(plot.title = element_text(hjust = 0.5))
 ```
-
