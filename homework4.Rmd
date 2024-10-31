@@ -16,11 +16,19 @@ library(tidyr)
 library(dplyr)
 library(countrycode)
 library(ggplot2)
+library(tmap)
+library(leafpop)
+library(leaflet)
+
 ```
 
 ## Read in data
 ```{r, echo = TRUE, results = 'hide'}
-Composite_indices <- read.csv(here("homework4_data","HDR23-24_Composite_indices_complete_time_series.csv"))
+Composite_indices <- read.csv(here("homework4_data","HDR23-24_Composite_indices_complete_time_series.csv"))%>%
+  select(gii_2010, gii_2019, iso3, country)
+
+## I added the above code to read only the columns we need
+
 World_Countries <- st_read(here("homework4_data","World_Countries_(Generalized)_9029012925078512962.geojson" ))
 
 names(Composite_indices)
@@ -65,3 +73,96 @@ ggplot(world_gender_inequality) +
   labs(title = "Gender Inequality Index Difference (2010-2019)") + 
   theme(plot.title = element_text(hjust = 0.5))
 ```
+
+```{r}
+
+popup_gii <- world_gender_inequality %>%
+  st_drop_geometry()%>%
+  dplyr::select(COUNTRY, gii_2019, gii_2010 ,gii_2019_2010)%>%
+  popupTable()
+
+
+tmap_mode("view")
+
+# Create the interactive map
+tm_shape(world_gender_inequality) + 
+  tm_polygons(
+    aes(fill = gii_2019_2010), 
+    lwd = 0.2, 
+    border.col = "white", 
+    title = "GII Difference") + 
+  tm_fill(
+    palette = c("#4575B4", "#FFFFFF", "#D73027"), 
+    style = "cont", 
+    breaks = seq(-1, 1, by = 0.2), # Adjust breaks according to your data
+    labels = c("Very Low", "Low", "Medium", "High", "Very High"),
+    na.color = "grey80"
+  ) + 
+  tm_layout(
+    title = "Gender Inequality Index Difference (2010-2019)",
+    title.position = c("center", "top"),
+    legend.position = c("right", "top"),
+    legend.title.size = 1.2,
+    legend.text.size = 0.8,
+    frame = FALSE
+  ) + 
+tm_scale_bar(position = c("left", "bottom"), text.size = 0.6) + 
+  tm_view(view.legend.position = c("right", "top"))  # Set legend position in view mode
+
+
+
+# Print the map
+tmap_leaflet(tm)
+
+
+```
+
+```{r}
+popup_gii <- world_gender_inequality %>%
+  st_drop_geometry()%>%
+  dplyr::select(COUNTRY, gii_2019, gii_2010 ,gii_2019_2010)%>%
+  popupTable()
+
+
+#tmap_mode("view")
+
+# Define a color palette for the GII column
+palette1 <- colorBin(palette = "Reds", domain = world_gender_inequality$gii_2019_2010, bins = 5)  # Adjust bins as needed
+
+
+# Create the leaflet map
+map <- leaflet(world_gender_inequality) %>%
+  # Add polygons, filling based on the "gii" column
+  addPolygons(color = "white", 
+              weight = 2,
+              opacity = 1,
+              dashArray = "3",
+              popup = popup_gii,  # Ensure this is defined with relevant data
+              fillOpacity = 0.7,
+              fillColor = ~palette1(gii_2019_2010))%>%
+
+ #add basemaps
+  addTiles(group = "OSM (default)") %>%
+  addProviderTiles(providers$Stadia.StamenToner, group = "Toner") %>%
+  addProviderTiles(providers$Stadia.StamenTonerLite, group = "Toner Lite") %>%
+  addProviderTiles(providers$CartoDB.Positron, group = "CartoDB") %>%
+  
+  # Add a legend
+  addLegend(pal = palette1, 
+            values = ~gii_2019_2010, 
+            position = "bottomright", 
+            title = "GII Difference") %>%
+  
+   # Set the view to show the world
+  setView(lng = 0, lat = 20, zoom = 2)  # Adjust the longitude, latitude, and zoom level as needed
+  
+map
+  
+                
+```
+
+
+
+
+
+
